@@ -7,6 +7,7 @@ import torch
 
 
 class SaveCheckpoint:
+    @classmethod
     def INPUT_TYPES(s):
         return {
             "required": {
