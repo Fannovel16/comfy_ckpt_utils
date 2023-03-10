@@ -11,7 +11,7 @@ class SaveCheckpoint:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "name": ("STRING", ),
+                "name": ("STRING", {"default": "my-merged-model"}),
                 "model": ("MODEL", ),
                 "clip": ("CLIP", ),
                 "vae": ("VAE", ),
