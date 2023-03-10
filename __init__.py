@@ -4,9 +4,12 @@ try:
 except:
     safetensors_support = False
 import torch
-
+import os
 
 class SaveCheckpoint:
+    def __init__(self):
+        self.output_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../models/checkpoint")
+
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -31,9 +34,9 @@ class SaveCheckpoint:
 
         state_dict = {**model_state_dict, **clip_state_dict, **vae_state_dict}
         if save_as == ".ckpt":
-            torch.save({"state_dict": state_dict}, f"{name}.ckpt")
+            torch.save({"state_dict": state_dict}, os.path.join(self.output_dir, f"{name}.ckpt"))
         else:
-            safetensors.torch.save_file({"state_dict": state_dict}, f"{name}.ckpt")
+            safetensors.torch.save_file({"state_dict": state_dict}, os.path.join(self.output_dir, f"{name}.safetensors"))
 
         clip.patcher.unpatch_model()
         model.unpatch_model()
