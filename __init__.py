@@ -37,4 +37,6 @@ class SaveCheckpoint:
         clip.patcher.unpatch_model()
         model.unpatch_model()
 
-
+NODE_CLASS_MAPPINGS = {
+    "SaveCheckpoint": SaveCheckpoint
+}
