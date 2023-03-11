@@ -9,7 +9,7 @@ from pathlib import Path
 
 class SaveCheckpoint:
     def __init__(self):
-        self.output_dir = Path(os.path.dirname(os.path.realpath(__file__)), "../../models/checkpoint")
+        self.output_dir = Path(os.path.dirname(os.path.realpath(__file__)), "../../models/checkpoints")
 
     @classmethod
     def INPUT_TYPES(s):
