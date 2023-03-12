@@ -6,7 +6,6 @@ except:
 import torch
 import os
 from pathlib import Path
-import gc
 import model_management
 
 class SaveCheckpoint:
@@ -18,7 +17,7 @@ class SaveCheckpoint:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "name": ("STRING", {"default": "my-merged-model"}),
+                "name": ("STRING", {"default": "my-model"}),
                 "model": ("MODEL", ),
                 "clip": ("CLIP", ),
                 "vae": ("VAE", ),
@@ -32,12 +31,18 @@ class SaveCheckpoint:
     CATEGORY = "checkpoint"
 
     def save_checkpoint(self, name, model, clip, vae, save_as):
+        #Prevent two-time patch
+        model.unpatch_model()
+        clip.patcher.unpatch_model()
 
+        model.patch_model()
+        clip.patcher.patch_model()
+
+        state_dict = {**model.model.state_dict()}
         state_dict_parts = {
             "cond_stage_model": clip.cond_stage_model.state_dict(),
             "first_stage_model": vae.first_stage_model.state_dict()
         }
-        state_dict = {**model.model.state_dict()}
         for part_key, part_value in state_dict_parts.items():
             for k, v in part_value.items():
                 state_dict[f"{part_key}.{k}"] = v
@@ -53,11 +58,9 @@ class SaveCheckpoint:
 
         del state_dict
         model_management.unload_model()
-        gc.collect()
-        if torch.cuda.is_available():
-            if torch.version.cuda:  # This seems to make things worse on ROCm so I only do it for cuda
-                torch.cuda.empty_cache()
-                torch.cuda.ipc_collect()
+        model.unpatch_model()
+        clip.patcher.unpatch_model()
+
         return {"ui": {"model": filename}}
 
 
