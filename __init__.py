@@ -8,7 +8,9 @@ import os
 from pathlib import Path
 import model_management
 
-from .utils import get_state_dicts, unpatch_models, weighted_sum, get_diff, add_diff
+from .utils import get_state_dicts, unpatch_models
+from .weighted_sums import FullWeightedSum, ModelWeightedSum, CLIPWeightedSum
+from .add_diffs import FullAddDiff, ModelAddDiff, CLIPAddDiff
 
 class SaveCheckpoint:
     def __init__(self):
@@ -63,5 +65,10 @@ class SaveCheckpoint:
 
 NODE_CLASS_MAPPINGS = {
     "SaveCheckpoint": SaveCheckpoint,
-
+    "FullWeightedSum": FullWeightedSum,
+    "ModelWeightedSum" : ModelWeightedSum,
+    "CLIPWeightedSum": CLIPWeightedSum,
+    "FullAddDiff": FullAddDiff,
+    "ModelAddDiff": ModelAddDiff,
+    "CLIPAddDiff": CLIPAddDiff
 }
